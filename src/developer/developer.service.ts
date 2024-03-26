@@ -10,7 +10,6 @@ export class DeveloperService {
     @InjectRepository(Developer)
     private developerRepository: Repository<Developer>,
   ) {}
-
   //Create
   async create(developerDto: DeveloperDTO) {
     try {
@@ -41,8 +40,8 @@ export class DeveloperService {
   //Delete
   async delete(id: number) {
     try {
-      const deleteContainer = await this.developerRepository.delete(id);
-      return deleteContainer;
+      const deleteDeveloper = await this.developerRepository.delete(id);
+      return deleteDeveloper;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

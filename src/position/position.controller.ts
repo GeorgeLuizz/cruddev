@@ -1,29 +1,60 @@
-import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { PositionService } from './position.service';
+import { PositionDTO } from './dto/position.dto';
 
-@Controller('/developers')
+@Controller('/position')
 export class PositionController {
-  @Post()
-  public create(): any {
-    return { data: 'Create!!' };
-  }
-
-  @Get(':id')
-  public getOne(): any {
-    return { data: 'Get one!!' };
-  }
+  constructor(private positionService: PositionService) {}
 
   @Get()
-  public getAll(): any {
-    return { data: 'Get all!!' };
+  async getPosition() {
+    const position = await this.positionService.get();
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Lista niveis cadastrados',
+      position,
+    };
   }
 
-  @Put(':id')
-  public update(): any {
-    return { data: 'Update!!' };
+  @Patch(':id')
+  async updatePosition(
+    @Body() positionDTO: PositionDTO,
+    @Param('id') id: number,
+  ) {
+    const updatedPosition = await this.positionService.update(positionDTO, id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Nivel alterado com sucesso!',
+      updatedPosition,
+    };
+  }
+
+  @Post()
+  async createPosition(@Body() positionDTO: PositionDTO) {
+    const position = await this.positionService.create(positionDTO);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Nivel criado com sucesso!',
+      position,
+    };
   }
 
   @Delete(':id')
-  public delete(): any {
-    return { data: 'Deleted!!' };
+  async deletePosition(@Param('id') id: number) {
+    const deletedPosition = await this.positionService.delete(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Nivel deletado!',
+      deletedPosition,
+    };
   }
 }
